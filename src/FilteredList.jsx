@@ -1,35 +1,44 @@
-import React, { Component } from 'react'; import List from './List';
+import React, { Component } from 'react'; 
+import {DropdownButton, Dropdown} from 'react-bootstrap' ; 
+import List from './List';
 
 class FilteredList extends Component {
 	constructor(props) {
 		super(props);
-		// 	The state is just a list of key/value pair (like a hashmap)
 		this.state = {
-			search: ""
+			search: "",
+			type: "All"
 		};
 	}
-	// Sets the state whenever the user types on the search bar 
+	
 	onSearch = (event) => {
-		this.setState({search: event.target.value.toLowerCase()});
+        this.setState({ search: event.target.value.trim().toLowerCase() });
+    }
+
+    onSelectType = (type) => {
+        this.setState({ type });
+    }
+
+	filterItem = (item) => {
+		return item.name.toLowerCase().includes(this.state.search) &&
+               (this.state.type === "All" || item.type === this.state.type);
 	}
-
-
-filterItem = (item) => {
-	// Checks if the current search term is contained in this item
-	return item.name.toLowerCase().search(this.state.search) !== -1;
+	/* TODO: Add an event handling method for when an item in dropdown is selected
+	Per the DropdownButton documentation, this function should take in an eventKey and event
+	*/
+	render() {
+		return (
+			<div>
+                <input type="text" placeholder="Search" onChange={this.onSearch} />
+                <DropdownButton title="Select Type" id="dropdown-basic-button">
+                    <Dropdown.Item onClick={() => this.onSelectType("All")}>All</Dropdown.Item>
+                    <Dropdown.Item onClick={() => this.onSelectType("Fruit")}>Fruit</Dropdown.Item>
+                    <Dropdown.Item onClick={() => this.onSelectType("Vegetable")}>Vegetable</Dropdown.Item>
+                </DropdownButton>
+                <List items={this.props.items.filter(this.filterItem)} />
+            </div>
+		);
+	}
 }
 
-render() {
-	return (
-		<div className="filter-list">
-		<h1>Produce Search</h1>
-		<input type="text" placeholder="Search" onChange={this.onSearch} />
-		{/* we are taking the items property (which is the list of
-		produce), filtering the content to match the search word, then
-		passing the filtered produce into the List component. */}
-		<List items={this.props.items.filter(this.filterItem)} />
-		</div>
-	);
-}
-}
 export default FilteredList;
