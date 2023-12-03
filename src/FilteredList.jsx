@@ -8,9 +8,11 @@ class FilteredList extends Component {
 			search: ""
 		};
 	}
-	// Sets the state whenever the user types on the search bar onSearch = (event) => {
-	this.setState({search: event.target.value.toLowerCase()});
-}
+	// Sets the state whenever the user types on the search bar 
+	onSearch = (event) => {
+		this.setState({search: event.target.value.toLowerCase()});
+	}
+
 
 filterItem = (item) => {
 	// Checks if the current search term is contained in this item
@@ -29,5 +31,5 @@ render() {
 		</div>
 	);
 }
-
+}
 export default FilteredList;
